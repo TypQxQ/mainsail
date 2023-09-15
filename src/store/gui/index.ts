@@ -10,10 +10,11 @@ import { console } from '@/store/gui/console'
 import { gcodehistory } from '@/store/gui/gcodehistory'
 import { macros } from '@/store/gui/macros'
 import { miscellaneous } from '@/store/gui/miscellaneous'
+import { navigation } from '@/store/gui/navigation'
+import { notifications } from '@/store/gui/notifications'
 import { presets } from '@/store/gui/presets'
 import { remoteprinters } from '@/store/gui/remoteprinters'
 import { webcams } from '@/store/gui/webcams'
-import { notifications } from '@/store/gui/notifications'
 
 export const getDefaultState = (): GuiState => {
     return {
@@ -29,6 +30,7 @@ export const getDefaultState = (): GuiState => {
         control: {
             style: 'bars',
             actionButton: null,
+            hideDuringPrint: false,
             enableXYHoming: false,
             feedrateXY: 100,
             stepsXY: [100, 10, 1],
@@ -110,7 +112,7 @@ export const getDefaultState = (): GuiState => {
             escToClose: true,
             confirmUnsavedChanges: true,
             klipperRestartMethod: 'FIRMWARE_RESTART',
-            moonrakerRestartInstance: null,
+            tabSize: 2,
         },
         gcodeViewer: {
             extruderColors: ['#E76F51FF', '#F4A261FF', '#E9C46AFF', '#2A9D8FFF', '#264653FF'],
@@ -141,6 +143,9 @@ export const getDefaultState = (): GuiState => {
             showGCodePanel: false,
             cncMode: false,
         },
+        navigation: {
+            entries: [],
+        },
         uiSettings: {
             logo: defaultLogoColor,
             primary: defaultPrimaryColor,
@@ -152,8 +157,16 @@ export const getDefaultState = (): GuiState => {
             boolBigThumbnail: true,
             boolWideNavDrawer: false,
             boolHideUploadAndPrintButton: false,
-            boolWebcamNavi: false,
             navigationStyle: 'iconsAndText',
+            defaultNavigationStateSetting: 'alwaysOpen',
+            powerDeviceName: null,
+            hideSaveConfigForBedMash: false,
+            disableFanAnimation: false,
+            boolManualProbeDialog: true,
+            boolBedScrewsDialog: true,
+            boolScrewsTiltAdjustDialog: true,
+            tempchartHeight: 250,
+            hideUpdateWarnings: false,
         },
         view: {
             blockFileUpload: false,
@@ -225,6 +238,7 @@ export const getDefaultState = (): GuiState => {
             tempchart: {
                 boolTempchart: true,
                 hiddenDataset: [],
+                hideMcuHostSensors: false,
                 autoscale: false,
                 datasetSettings: {},
             },
@@ -260,6 +274,7 @@ export const gui: Module<GuiState, any> = {
         gcodehistory,
         macros,
         miscellaneous,
+        navigation,
         notifications,
         presets,
         remoteprinters,

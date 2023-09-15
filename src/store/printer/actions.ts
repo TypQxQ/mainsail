@@ -63,9 +63,18 @@ export const actions: ActionTree<PrinterState, RootState> = {
     },
 
     getInitData({ dispatch }, payload) {
+        if ('screws_tilt_adjust' in payload.status) {
+            payload.status.screws_tilt_adjust.error = false
+            payload.status.screws_tilt_adjust.results = {}
+        }
+
         dispatch('getData', payload)
 
         Vue.$socket.emit('server.temperature_store', {}, { action: 'printer/tempHistory/init' })
+
+        setTimeout(() => {
+            dispatch('initExtruderCanExtrude')
+        }, 200)
     },
 
     getData({ commit, dispatch, state }, payload) {
@@ -120,6 +129,17 @@ export const actions: ActionTree<PrinterState, RootState> = {
         commit('setData', payload)
     },
 
+    initExtruderCanExtrude({ state }) {
+        const extruderList: string[] = Object.keys(state).filter((name) => name.startsWith('extruder'))
+        const reInitList: { [key: string]: string[] } = {}
+
+        extruderList.forEach((extruderName) => {
+            reInitList[extruderName] = ['can_extrude']
+        })
+
+        Vue.$socket.emit('printer.objects.query', { objects: reInitList }, { action: 'printer/getData' })
+    },
+
     initHelpList({ commit, dispatch }, payload) {
         commit('setHelplist', payload)
 
@@ -142,5 +162,9 @@ export const actions: ActionTree<PrinterState, RootState> = {
         } else {
             Vue.$socket.emit('printer.gcode.script', { script: payload }, { loading: 'sendGcode' })
         }
+    },
+
+    clearScrewsTiltAdjust({ commit }) {
+        commit('clearScrewsTiltAdjust')
     },
 }
