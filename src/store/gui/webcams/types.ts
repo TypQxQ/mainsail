@@ -27,6 +27,10 @@ export interface GuiWebcamStateWebcam {
     aspect_ratio?: string
     extra_data?: {
         hideFps?: boolean
+        nozzle_calibration?: boolean
+        pixel_per_mm: number
+        nozzle_flip_x?: boolean
+        nozzle_flip_y?: boolean
     }
     source?: 'config' | 'database'
 }
